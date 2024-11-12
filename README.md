@@ -1,4 +1,31 @@
-"# Analisis-y-Dise-o-de-Algoritmos"  git init git add README.md git commit -m "first commit" git branch -M master git remote add origin https://github.com/codpez/Analisis-y-Dise-o-de-Algoritmos.git git push -u origin master
-"# Analisis-y-Dise-o-de-Algoritmos" 
 
-Codigos y analisis para resolver la tarea 4 del curso de Analisis y diseño de algoritmos.
+# Flujo usar git
+
+Agregar archivos
+```bash
+  git add .
+```
+
+Poner un mensaje al commit
+```bash
+  git commit -m "mensaje aqui"  
+```
+
+Subir archivos
+```bash
+  git push
+```
+
+## Compilar programas
+```bash
+  g++ -std=c++17 nombre_programa.cpp -o nombre_programa
+```
+
+## Ejecutar programa pasandole un archivo
+```bash
+  ./nombre_programa < archivo.txt
+```
+
+
+
+>>>>>>> 7280562f49dcff76b44881ee76e9f809d22b620c
