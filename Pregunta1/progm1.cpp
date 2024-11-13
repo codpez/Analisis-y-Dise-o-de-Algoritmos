@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
 #include <tuple>
+#include <fstream>
+#include <string>
+#include <set>
 /* Uriel Delgado Guevara
 
 Referencias usadas para el codigo:
@@ -9,6 +12,8 @@ https://www.naukri.com/code360/library/check-if-two-line-segments-intersect
 https://www.youtube.com/watch?v=bvlIYX9cgls
 https://www.luisllamas.es/cpp-que-son-tuplas/
 https://en.cppreference.com/w/cpp/utility/pair
+https://www.learncpp.com/cpp-tutorial/stdoptional/
+
 ///////////////*****************************************************************************////////////////*/
 
 // defino mi segmento y punto
@@ -19,16 +24,25 @@ using punto = std::pair<int,int>;
 using segmento = std::tuple<punto,punto>;
 
 
-std::vector<segmento> extraerDatos(int n){    // Funcion para extraer datos del txt y guardarlos.
+// std::vector<segmento> extraerDatos(int n){    // Funcion para extraer datos del txt y guardarlos.
+//     std::vector<segmento> segmentos;
+//     for (int i=0; i<n; i++){
+//         int x1,y1,x2,y2;
+//         std::cin >> std::get<0>(std::get<0>(segmentos)) >> std::get<1>(std::get<0>(segmentos)) >> std::get<0>(std::get<1>(segmentos)) >> std::get<1x|>(std::get<1>(segmentos));
+//         segmentos.push_back(std::make_tuple(x1,y1,x2,y2)); 
+//     }
+//     return segmentos;
+// 
+
+std::vector<segmento> extraerDatos(int n) {
     std::vector<segmento> segmentos;
-    for (int i=0; i<n; i++){
-        int x1,y1,x2,y2;
-        std::cin >> std::get<0>(std::get<0>(segmentos)) >> std::get<1>(std::get<0>(segmentos)) >> std::get<0>(std::get<1>(segmentos)) >> std::get<1x|>(std::get<1>(segmentos));
-        segmentos.push_back(std::make_tuple(x1,y1,x2,y2)); 
+    for (int i = 0; i < n; i++) {
+        int x1, y1, x2, y2;
+        std::cin >> x1 >> y1 >> x2 >> y2;
+        segmentos.push_back(std::make_tuple(punto(x1, y1), punto(x2, y2)));
     }
     return segmentos;
 }
-
 
 int orientacion(punto p, punto q, punto r) // Funcion para saber la orientacion de un segmento.
 {   // Obtengo la orientacion del segmento.
@@ -49,7 +63,7 @@ bool esColinear(punto a1,punto b1, punto a2, punto b2){
     }
     return false;
 }
-//Funcion para encontrar si hay o no interseccio
+//Funcion para saber si hay o no interseccion
 bool seIntersecta(punto a1, punto b1, punto a2, punto b2) {
     int d1 = orientacion(a1, b1, a2);
     int d2 = orientacion(a1, b1, b2);
@@ -70,44 +84,82 @@ bool seIntersecta(punto a1, punto b1, punto a2, punto b2) {
 }
 
 //Funcion que uso para imprimir un vector de segmentos
-void print(std::vector<segmento> &input)
-{
-    for (const auto& segmento : input) { // for each para recorrer todo el vector
-        std::cout << "("
-                   <<std::get<0>(segmento)<<","
-                   <<std::get<1>(segmento)<<","
-                   <<std::get<2>(segmento)<<","
-                   <<std::get<3>(segmento)<<")"<<std::endl;}
-    
-}
-//Funcion que uso para imprimir un elemento del vector de segmentos
-void print1(segmento segmento)
-{
-        std::cout << "("
-                   <<std::get<0>(segmento)<<","
-                   <<std::get<1>(segmento)<<","
-                   <<std::get<2>(segmento)<<","
-                   <<std::get<3>(segmento)<<")"<<std::endl;
-    
-}
 
-
-//Funcion para transformar mis datos antes de meterlos a la funcion seIntersecta y que itera sobre el vector para verificar todas las posibles intersecciones
-
-void manejoDatosEinterseccion(std::vector<segmento> segmentos){
-    for(auto sec = segmentos.rbegin(); sec != segmentos.rend();++sec){
-        print1(*sec);
-        for
+void print(const std::vector<segmento> &input) {
+    for (const auto& seg : input) {
+        const auto& p1 = std::get<0>(seg);
+        const auto& p2 = std::get<1>(seg);
+        std::cout << "(" << p1.first << ", " << p1.second << ", " << p2.first << ", " << p2.second << ")\n";
     }
-    // for(int i=0;i<segmentos.size();i++){
-    //     print1(segmentos[i]);
-    //     for(int=1;i<segmentos.size();i++){
-
-    //     }
-    // }
-
-
 }
+
+void print1(const segmento& seg) {
+    const auto& p1 = std::get<0>(seg);
+    const auto& p2 = std::get<1>(seg);
+    std::cout << "(" << p1.first << ", " << p1.second << ", " << p2.first << ", " << p2.second << ")\n";
+}
+
+
+
+
+// Función para calcular el punto de intersección cuando sabemos que se intersectan
+punto calcularPuntoInterseccion(punto a1, punto b1, punto a2, punto b2) {
+    int A1 = b1.second - a1.second;
+    int B1 = a1.first - b1.first;
+    int C1 = A1 * a1.first + B1 * a1.second;
+
+    int A2 = b2.second - a2.second;
+    int B2 = a2.first - b2.first;
+    int C2 = A2 * a2.first + B2 * a2.second;
+
+    int det = A1 * B2 - A2 * B1;
+
+    // Dado que `seIntersecta` confirmó la intersección, no necesitamos verificar `det == 0`
+    int x = (B2 * C1 - B1 * C2) / det;
+    int y = (A1 * C2 - A2 * C1) / det;
+
+    return punto(x, y); // Punto de intersección
+}
+
+// Función para manejar datos e intersecciones
+void manejoDatosEinterseccion(const std::vector<segmento>& segmentos) {
+    std::ofstream outfile("intersecciones.txt");
+    int k = 0;
+    std::string resultado;
+    std::set<punto> interseccionesUnicas;
+    for (size_t i = 0; i < segmentos.size(); i++) {
+        for (size_t j = i + 1; j < segmentos.size(); j++) {
+            const auto& a1 = std::get<0>(segmentos[i]);
+            const auto& b1 = std::get<1>(segmentos[i]);
+            const auto& a2 = std::get<0>(segmentos[j]);
+            const auto& b2 = std::get<1>(segmentos[j]);
+
+            if (seIntersecta(a1, b1, a2, b2)) {
+                punto interseccion = calcularPuntoInterseccion(a1, b1, a2, b2);
+
+                // Verificar que el punto está dentro de los límites de ambos segmentos
+                if (std::min(a1.first, b1.first) <= interseccion.first && interseccion.first <= std::max(a1.first, b1.first) &&
+                    std::min(a1.second, b1.second) <= interseccion.second && interseccion.second <= std::max(a1.second, b1.second) &&
+                    std::min(a2.first, b2.first) <= interseccion.first && interseccion.first <= std::max(a2.first, b2.first) &&
+                    std::min(a2.second, b2.second) <= interseccion.second && interseccion.second <= std::max(a2.second, b2.second)) {
+
+                    // Intentamos insertar el punto en el set
+                    if (interseccionesUnicas.insert(interseccion).second) {
+                        k++;
+                        resultado += std::to_string(interseccion.first) + " " + std::to_string(interseccion.second) + "\n";
+                        
+                        // Imprimir en consola el punto de intersección detectado
+                        //std::cout << "Interseccion " << k << ": (" << interseccion.first << ", " << interseccion.second << ")\n";
+                    }
+        }
+    }
+    std::ofstream outfile("intersecciones.txt");
+    outfile << k << "\n" << resultado;
+    outfile.close();
+  }
+}
+}
+
 
 int main(){
   
@@ -117,6 +169,7 @@ int main(){
     int n;
     std::cin >> n;
     segmentos = extraerDatos(n);
+    //print(segmentos);
     manejoDatosEinterseccion(segmentos);
     // punto a1 = {1, 2}, b1 = {1, 7}, a2 = {5, 5}, b2 = {-5,5};
     // std::cout << orientacion(a1,b1,a2)<< std::endl;
