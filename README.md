@@ -25,7 +25,3 @@ Subir archivos
 ```bash
   ./nombre_programa < archivo.txt
 ```
-
-
-
->>>>>>> 7280562f49dcff76b44881ee76e9f809d22b620c
