@@ -1,3 +1,4 @@
+
 # Flujo usar git
 
 Agregar archivos
@@ -27,3 +28,4 @@ Subir archivos
 
 
 
+>>>>>>> 7280562f49dcff76b44881ee76e9f809d22b620c
