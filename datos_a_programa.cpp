@@ -19,7 +19,7 @@ int main(){
 
   std::cout << "El valor1 es:" << valor1 << std::endl;
   std::cout << "El valor2 es:" << valor2 << std::endl;
-
+  
   return 0;
   
 }
