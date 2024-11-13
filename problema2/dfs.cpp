@@ -47,14 +47,14 @@ std::vector<std::vector<arista>> adj_list;
 //DFS
 //int dfs(std::vector<std::vector<arista>> &adj_list){
 int dfs(int v){
-  
-  
-  
+
   predfn = predfn + 1;
   visitados[v] = true;
+
   for(int i=0;i<adj_list[v].size();i++){
     std::cout << "Analizando nodo: " << v << std::endl;
-    std::cout << "visite: " << adj_list[v][i].first << std::endl;
+    std::cout << "visite: " << adj_list[v][i].first
+	      << " w: " << adj_list[v][i].second <<std::endl;
     if(visitados[adj_list[v][i].first]==false){
       if(visitados[adj_list[v][i].first]==false){
 	dfs(adj_list[v][i].first);
@@ -63,23 +63,7 @@ int dfs(int v){
   }
 
   postdfn = postdfn + 1;
-
-  /**-----------------------------------------------
-  // imprimir lista de adjacencia
-  //-----------------------------------------------
-  int cc = 1;
-  for(const auto& nodo: adj_list){
-    
-    std::cout << "---------------------" << std::endl;
-    std::cout << "nodo: " << cc << std::endl;
-    std::cout << "---------------------" << std::endl;
-    for(const auto& vecinos: nodo){
-      std::cout << cc << "," << vecinos.first << "-" << vecinos.second << std::endl;
-    }
-    cc = cc + 1;
-  }
-  //-----------------------------------------------**/
-
+  
   return 0;
 }
 
