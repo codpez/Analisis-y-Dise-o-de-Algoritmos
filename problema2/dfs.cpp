@@ -37,11 +37,11 @@ Asegurese de utilizar una lista de adyacencia para representar el grafo.
 //variables globales para tener acceso dentro de las funciones
 typedef std::pair<int,int> arista;
 
-std::vector<int> arr;
-std::vector<std::pair<int,int>> combinaciones;
-
 std::list<std::pair<std::list<int>,int>> lista_camino;
 
+//https://www.geeksforgeeks.org/print-all-possible-combinations-of-r-elements-in-a-given-array-of-size-n/
+std::vector<int> arr;
+std::vector<std::pair<int,int>> combinaciones;
 void combinationUtil(std::vector<int> arr,int data[],int start,int end,int index,int r);
 
 int costo = 0;
@@ -93,13 +93,13 @@ bool dfs(int v,int fin,std::vector<std::vector<arista>> adj_list,std::vector<boo
 }
 
 
-
 //https://www.geeksforgeeks.org/print-all-possible-combinations-of-r-elements-in-a-given-array-of-size-n/
 void combination(std::vector<int> arr, int n, int r){
   int data[r];
   combinationUtil(arr,data,0,n-1,0,r);
 }
 
+//https://www.geeksforgeeks.org/print-all-possible-combinations-of-r-elements-in-a-given-array-of-size-n/
 void combinationUtil(std::vector<int> arr,int data[],int start,int end,int index,int r){
   if(index ==r){
     //std::cout << data[0] << "," << data[1] << std::endl;
@@ -114,17 +114,17 @@ void combinationUtil(std::vector<int> arr,int data[],int start,int end,int index
   
 }
 
+//hilo principal
 int main(){
 
-  int num_ciudades;
-  int num_carreteras;
+  int num_ciudades;   //vertices
+  int num_carreteras; //aristas
 
   std::vector<bool> visitados;               //visitados
   std::vector<std::vector<arista>> adj_list; //lista de adjacencia
   
   std::list<int> camino; //camino actual
-  //std::vector<std::pair<int,int>> todos_caminos;
-  
+    
   //------ construir adj list ------------
   std::cin >> num_ciudades >> num_carreteras;
   
@@ -141,13 +141,13 @@ int main(){
   }
   //--------------------------------------
 
-  
+  //llenar visitados respecto a adj list
   for(int i=0;i<(int)adj_list.size();i++){
     visitados[i] = false;
     arr.push_back(i);
   }
 
-  //combinaciones
+  //combinaciones par de ciudades
   int r = 2;
   int n = adj_list.size();
 
@@ -157,7 +157,7 @@ int main(){
   for(int i=0;i<(int)combinaciones.size();i++){
     
     //std::cout << combinaciones[i].first <<","<< combinaciones[i].second<< std::endl;
-    
+
     int inicio = combinaciones[i].first;
     int fin = combinaciones[i].second;
     
@@ -165,33 +165,29 @@ int main(){
     
   }
 
-  //iterar la lista para obtener el peso max
-  
+  //----- OBTENER PESO MAXIMO --------------
   int peso_max = 0;
   std::list<int> camino_max;
   
-  //std::list<std::pair<std::list<int>,int>> lista_camino;
-  //lista_camino.push_back(std::make_pair(camino,costo));
-  std::cout << "IMPRIMIR CAMINOS" << std::endl;
-
-
-  lista_camino.push_back(std::make_pair(camino,costo));
-
+  //iterar en la lista_camino's encontrados
   for(auto nodo: lista_camino) {
     if(nodo.second>peso_max){
       peso_max = nodo.second;
       camino_max = nodo.first;
     }
   }
+  
+  std::cout << "PESO MAX: " << peso_max << std::endl;
+  std::cout << "----------" << std::endl;
+  std::cout << "RECORRIDO: " << std::endl;
 
+  //iterar en la lista del camino max
   for(auto camino: camino_max){
     std::cout << camino << " " ;
   }
 
   std::cout << std::endl;
-  
-  std::cout << peso_max << std::endl;
-  
+    
   return 0;
 
 }
