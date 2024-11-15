@@ -1,5 +1,5 @@
-%algo aqui
-100 100 1000
+% Grafo bipartita completo con 100 nodos (50,50)
+100 2500
 1 51
 1 52
 1 53

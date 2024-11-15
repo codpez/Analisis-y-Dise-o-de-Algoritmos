@@ -3,6 +3,10 @@
 #include <vector>
 #include <queue>
 
+// Ejecutar
+//  ./prog1 < grafo1_true.tx
+//  ./prog1 < grafo1_false.tx
+
 //Un grafo es bipartita si todos sus vértices pueden ser divididos en dos subconjuntos disjuntos X y Y de forma tal que cada arco conecte un vertice en X con uno en Y.
 //referencia https://www.geeksforgeeks.org/bipartite-graph/#using-breadthfirst-search-bfs
 
