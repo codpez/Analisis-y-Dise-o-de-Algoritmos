@@ -1,9 +1,6 @@
 #include <iostream>
-#include <queue>
 #include <vector>
-#include <stack>
 #include <list>
-#include <set>
 
 //Empresa de transportes
 //Conocer:
@@ -25,7 +22,7 @@ par de almacenes ya que esto le permitirá tomar decisiones estratégicas para
 hacer más eficiente la operación de su empresa. Dado este problema práctico, 
 desarrolle los siguientes puntos:
 a) Diseñe e implemente en C++ un algoritmo recursivo basado en DFS para encontrar
-la ruta más larga entre cualquier par de almacenes de la empresa. 
+la ruta más larga entre cualquier par de almacenes de la empresa.
 El programa recibe por redirección de la lı́nea de comandos 
 el nombre de un archivo de texto que contiene un grafo ponderado 
 dirigido con el formato que se utilizó en clase (sesión 9). 
@@ -37,78 +34,128 @@ Asegurese de utilizar una lista de adyacencia para representar el grafo.
 
  **/
 
+//variables globales para tener acceso dentro de las funciones
 typedef std::pair<int,int> arista;
 
 int predfn = 0;
 int postdfn = 0;
-std::vector<bool> visitados;
-std::vector<std::vector<arista>> adj_list;
 
-//DFS
-//int dfs(std::vector<std::vector<arista>> &adj_list){
-int dfs(int v){
 
-  predfn = predfn + 1;
+
+//int costo;
+
+std::vector<int> arr;
+std::vector<std::pair<int,int>> combinaciones;
+
+void combinationUtil(std::vector<int> arr,int data[],int start,int end,int index,int r);
+
+int costo = 0;
+
+//DFS recursivo
+int dfs(int v,int fin,std::vector<std::vector<arista>> adj_list,std::vector<bool> visitados){
+  
   visitados[v] = true;
 
+  if(v==fin){
+    std::cout << "encontre el camino costo::" << costo<< std::endl;
+    //std::cout << "encontre el camino ::" << std::endl;
+    costo = 0;
+    return(0);
+  }
+  
   for(int i=0;i<adj_list[v].size();i++){
-    std::cout << "Analizando nodo: " << v << std::endl;
-    std::cout << "visite: " << adj_list[v][i].first
-	      << " w: " << adj_list[v][i].second <<std::endl;
+
     if(visitados[adj_list[v][i].first]==false){
-      if(visitados[adj_list[v][i].first]==false){
-	dfs(adj_list[v][i].first);
-      }
+
+      std::cout << "Analizando nodo: " << v << "a visitar: " << adj_list[v][i].first
+		<< " w: " << adj_list[v][i].second <<std::endl;
+
+      costo = costo + adj_list[v][i].second; //si no esta visitado sumarlo al costo
+            
+      dfs(adj_list[v][i].first,fin,adj_list,visitados);
+      
+      
     }
   }
 
-  postdfn = postdfn + 1;
+  return -1;
+}
+
+
+//https://www.geeksforgeeks.org/print-all-possible-combinations-of-r-elements-in-a-given-array-of-size-n/
+void combination(std::vector<int> arr, int n, int r){
+  int data[r];
+  combinationUtil(arr,data,0,n-1,0,r);
+}
+
+void combinationUtil(std::vector<int> arr,int data[],int start,int end,int index,int r){
+  if(index ==r){
+    //std::cout << data[0] << "," << data[1] << std::endl;
+    combinaciones.push_back(std::make_pair(data[0],data[1]));
+    return;
+  }
+
+  for(int i=start;i<=end&&end-i+1>=r-index;i++){
+    data[index] = arr[i];
+    combinationUtil(arr,data,i+1,end,index+1,r);
+  }
   
-  return 0;
 }
 
 int main(){
 
   int num_ciudades;
   int num_carreteras;
+
+  std::vector<bool> visitados;               //visitados
+  std::vector<std::vector<arista>> adj_list; //lista de adjacencia
+  
+  std::list<int> camino;
+  std::list<int> todos_caminos;
   
   //------ construir adj list ------------
   std::cin >> num_ciudades >> num_carreteras;
-
+  
+  //uno basado
   adj_list.resize(num_ciudades+1);
   visitados.resize(num_ciudades+1);
   
   for(int i=0;i<num_carreteras;i++){
     
-    int u,v,peso;
-    std::cin >> u >> v >> peso;
-    //TODO: fix cero basado uno basado
-    adj_list[u].push_back(arista(v,peso));
+    int u,v,w;
+    std::cin >> u >> v >> w;
+    adj_list[u].push_back(arista(v,w));
     
   }
   //--------------------------------------
+
   
   predfn  = 0;
   postdfn = 0;
   
   for(int i=0;i<adj_list.size();i++){
     visitados[i] = false;
-    //std::cout << "*****" << std::endl;
-    //std::cout << "Nodo:: " << i+1 << std::endl;
-    //std::cout << "-----" << std::endl;
-    //for(int j=0;j<adj_list[i].size();j++){
-    //  std::cout << i+1 << " - " << adj_list[i][j].first << " - w:" << adj_list[i][j].second << std::endl;
-    //}
+    arr.push_back(i);
   }
 
-  for(int i=0;i<adj_list.size();i++){
-    if(visitados[i]==false){
-      dfs(i);
-    }
+  //combinaciones
+  int r = 2;
+  int n = adj_list.size();
+
+  combination(arr,n,r);
+
+  //iterar en los pares
+  for(int i=0;i<combinaciones.size();i++){
+    
+    std::cout << combinaciones[i].first <<","<< combinaciones[i].second<< std::endl;
+    
+    int inicio = combinaciones[i].first;
+    int fin = combinaciones[i].second;
+    
+    dfs(inicio,fin,adj_list,visitados);
+    
   }
-  
-  //
-  std::cout << predfn << std::endl;
-  std::cout << postdfn << std::endl;
+   
   return 0;
+
 }

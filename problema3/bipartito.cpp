@@ -18,6 +18,7 @@ int main() {
   //ingreasr los datos desde consola
   //Crear el grafo con lista de adjacencia
   //con los valores leidos
+
   std::cin >> vertice >> arista;
 
   //se crea un array de vectores con la cardinalidad de vertices(nodos)
