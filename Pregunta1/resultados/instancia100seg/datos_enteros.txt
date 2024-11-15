@@ -1,0 +1,18 @@
+1.0.008624 segundos
+2.0.008624 segundos
+3.0.002215 segundos
+4.0.008624 segundos
+5.0.015626 segundos
+6.0.008624 segundos
+7.0.008624 segundos
+8.0.008031 segundos
+9.0.008624 segundos
+10.0.008824 segundos
+
+promedio
+
+0.008644 segundos
+
+desviacion estandar
+
+0.003008 segundos

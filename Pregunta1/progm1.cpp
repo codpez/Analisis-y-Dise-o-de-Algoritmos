@@ -3,7 +3,6 @@
 #include <tuple>
 #include <string>
 #include <set>
-#include <ctime>
 #include <chrono>
 using punto = std::pair<int, int>;
 using segmento = std::tuple<punto, punto>;
@@ -51,7 +50,7 @@ punto calcularPuntoInterseccion(punto a1, punto b1, punto a2, punto b2) {
     int C2 = A2 * a2.first + B2 * a2.second;
 
     int det = A1 * B2 - A2 * B1;
-    if (det == 0) return {-1, -1}; // En caso de que no haya intersección
+    if (det == 0) return {-1, -1}; // No hay intersección
 
     int x = (B2 * C1 - B1 * C2) / det;
     int y = (A1 * C2 - A2 * C1) / det;
@@ -83,12 +82,13 @@ std::vector<punto> manejoDatosEinterseccion(const std::vector<segmento>& segment
 }
 
 int main() {
+    auto inicio = std::chrono::high_resolution_clock::now();
     int n;
     if (!(std::cin >> n) || n <= 0) {
         std::cerr << "Numero de segmentos invalido o error de entrada." << std::endl;
         return 1;
     }
-    auto inicio = std::chrono::high_resolution_clock::now();
+    
     std::vector<segmento> segmentos = extraerDatos(n);
     std::vector<punto> resultado = manejoDatosEinterseccion(segmentos);
 

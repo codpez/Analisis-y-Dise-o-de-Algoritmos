@@ -1,0 +1,17 @@
+1.21542 microseg
+2.5730  microseg
+3.13840 microseg
+4.16986 microseg
+5.15553 microseg
+6.16498 microseg
+7.15044 microseg
+8.15690 microseg
+9.17322 microseg
+10.14080 microseg
+
+promedio
+5.7039 microsegundos
+
+desviacion estandar
+2.8148 microsegundos
+
