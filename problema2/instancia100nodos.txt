@@ -1,5 +1,5 @@
-Grafo ponderado, no dirigido, 100 nodos, 150 aristas
-100 150
+%Grafo ponderado, no dirigido, 100 nodos, 150 aristas
+100 149
 1 2 8
 1 3 5
 1 4 10

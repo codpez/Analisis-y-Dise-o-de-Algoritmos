@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <list>
 
 //Empresa de transportes
 //Conocer:
@@ -39,8 +40,7 @@ typedef std::pair<int,int> arista;
 int predfn = 0;
 int postdfn = 0;
 
-std::vector<bool> visitados;               //visitados
-std::vector<std::vector<arista>> adj_list; //lista de adjacencia
+
 
 //int costo;
 
@@ -51,21 +51,17 @@ void combinationUtil(std::vector<int> arr,int data[],int start,int end,int index
 
 int costo = 0;
 
-//encontrar todos los caminos
-std::vector<std::vector<int>> caminos(int inicio, int fin){
-  std::vector<std::vector<int>> lista_caminos;
-  std::vector<int> ruta_actual;
-  std::vector<bool> visitados;
-  dfs(inicio,fin,ruta_actual,visitados,lista_caminos);
-  return lista_caminos;
-}
-
 //DFS recursivo
-int dfs(int v,int fin,std::vector<int> ruta_actual,std::vector<bool> visitados, std::vector<std::vector<int>> lista_caminos){
-
-  ruta_actual.push_back(v);
+int dfs(int v,int fin,std::vector<std::vector<arista>> adj_list,std::vector<bool> visitados){
   
   visitados[v] = true;
+
+  if(v==fin){
+    std::cout << "encontre el camino costo::" << costo<< std::endl;
+    //std::cout << "encontre el camino ::" << std::endl;
+    costo = 0;
+    return(0);
+  }
   
   for(int i=0;i<adj_list[v].size();i++){
 
@@ -75,31 +71,16 @@ int dfs(int v,int fin,std::vector<int> ruta_actual,std::vector<bool> visitados, 
 		<< " w: " << adj_list[v][i].second <<std::endl;
 
       costo = costo + adj_list[v][i].second; //si no esta visitado sumarlo al costo
-      
-      
-      if(adj_list[v][i].first == fin){ //si es el resultado parar
-	std::cout << "encontre el camino costo::" << costo<< std::endl;
-	//std::cout << "encontre el camino ::" << std::endl;
-	costo = 0;
-	return 0;
-      }
-
-      
-      //peso = dfs(adj_list[v][i].first);      
-
-      
-      //************cosas del problema*******************
-
-      dfs(adj_list[v][i].first,fin);
+            
+      dfs(adj_list[v][i].first,fin,adj_list,visitados);
       
       
     }
   }
 
-  //postdfn = postdfn + 1;
-  //std::cout << "post: " << postdfn << std::endl;
   return -1;
 }
+
 
 //https://www.geeksforgeeks.org/print-all-possible-combinations-of-r-elements-in-a-given-array-of-size-n/
 void combination(std::vector<int> arr, int n, int r){
@@ -125,13 +106,17 @@ int main(){
 
   int num_ciudades;
   int num_carreteras;
-  
-  int peso;
 
+  std::vector<bool> visitados;               //visitados
+  std::vector<std::vector<arista>> adj_list; //lista de adjacencia
+  
+  std::list<int> camino;
+  std::list<int> todos_caminos;
+  
   //------ construir adj list ------------
   std::cin >> num_ciudades >> num_carreteras;
   
-  //TODO: fix cero basado uno basado
+  //uno basado
   adj_list.resize(num_ciudades+1);
   visitados.resize(num_ciudades+1);
   
@@ -153,58 +138,24 @@ int main(){
     arr.push_back(i);
   }
 
-  /*
-    for(int i=0;i<adj_list.size();i++){
-    if(visitados[i]==false){
-      dfs(i);
-    }
-  }
-  */
-
+  //combinaciones
   int r = 2;
   int n = adj_list.size();
 
   combination(arr,n,r);
 
   //iterar en los pares
-  //for(int i=0;i<combinaciones.size();i++){
-    
-  //std::cout << combinaciones[i].first <<","<< combinaciones[i].second<< std::endl;
-
-  int inicio = 1;//combinaciones[i].first;
-  int fin = 8;//combinaciones[i].second;
-
-  if(visitados[inicio]==false){
-    dfs(inicio,fin);
-  }
-  //  std::vector<bool> visitados(n,false);
-  //}
-  
-  /*
   for(int i=0;i<combinaciones.size();i++){
-
-    //std::cout << combinaciones[i].first <<","<< combinaciones[i].second<< std::endl;
-
-    std::cout << "VISITAR:" << combinaciones[i].first << "," << combinaciones[i].second << std::endl;
-
     
-
+    std::cout << combinaciones[i].first <<","<< combinaciones[i].second<< std::endl;
     
+    int inicio = combinaciones[i].first;
+    int fin = combinaciones[i].second;
+    
+    dfs(inicio,fin,adj_list,visitados);
     
   }
-  */
-    
-
-  /*
-  for(int i=0;i<adj_list.size();i++){
-    if(visitados[i]==false){
-      dfs(i);
-    }
-  }
-  */
-
-  
-  
+   
   return 0;
 
 }
