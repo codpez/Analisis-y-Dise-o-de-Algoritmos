@@ -1,0 +1,54 @@
+# Función para realizar la búsqueda DFS
+DFS(grafo, nodo_actual, visitado, camino_actual, peso_actual, lista_de_caminos):
+    # Marcar el nodo actual como visitado
+    visitado[nodo_actual] = verdadero
+
+    # Agregar el nodo actual al camino que estamos construyendo
+    camino_actual.agregar(nodo_actual)
+
+    # Si hemos llegado a un nodo objetivo (opcional, depende del problema)
+    si nodo_actual es un nodo objetivo:
+        # Guardar el camino actual y su peso total en la lista de caminos
+        lista_de_caminos.agregar((copia_de(camino_actual), peso_actual))
+
+    # Explorar los vecinos del nodo actual
+    para cada (vecino, peso) en grafo[nodo_actual]:  # Vecinos con sus pesos
+        si vecino no ha sido visitado:
+            # Llamar a DFS de forma recursiva para continuar el recorrido
+            DFS(grafo, vecino, visitado, camino_actual, peso_actual + peso, lista_de_caminos)
+
+    # Regresar al punto anterior en el camino (backtracking)
+    camino_actual.eliminar_el_ultimo()
+    visitado[nodo_actual] = falso  # Desmarcar el nodo para que pueda usarse en otro camino
+
+# Función para encontrar el camino más largo en la lista de caminos
+encontrar_camino_mas_largo(lista_de_caminos):
+    # Iniciar un camino vacío como el más largo
+    camino_mas_largo = []
+    peso_maximo = -infinito
+
+    # Comparar cada camino en la lista
+    para cada (camino, peso_total) en lista_de_caminos:
+        si peso_total > peso_maximo:
+            camino_mas_largo = camino
+            peso_maximo = peso_total
+
+    # Devolver el camino más largo encontrado y su peso
+    devolver (camino_mas_largo, peso_maximo)
+
+# Función principal
+funcion principal():
+    grafo = cargar_el_grafo_ponderado()  # Cargar o construir el grafo (lista de adyacencia con pesos)
+    visitado = lista_de_falsos(tamaño del grafo)  # Marcar todos los nodos como no visitados
+    camino_actual = []  # Guardará el camino que estamos explorando
+    lista_de_caminos = []  # Guardará todos los caminos posibles junto con sus pesos
+
+    # Iniciar DFS desde el nodo inicial
+    nodo_inicial = 0  # Por ejemplo, el nodo 0
+    DFS(grafo, nodo_inicial, visitado, camino_actual, 0, lista_de_caminos)
+
+    # Encontrar el camino más largo entre todos los caminos registrados
+    (camino_mas_largo, peso_maximo) = encontrar_camino_mas_largo(lista_de_caminos)
+
+    # Mostrar el camino más largo encontrado y su peso
+    imprimir("El camino más largo es:", camino_mas_largo, "con peso:", peso_maximo)

@@ -37,49 +37,60 @@ Asegurese de utilizar una lista de adyacencia para representar el grafo.
 //variables globales para tener acceso dentro de las funciones
 typedef std::pair<int,int> arista;
 
-int predfn = 0;
-int postdfn = 0;
-
-
-
-//int costo;
-
 std::vector<int> arr;
 std::vector<std::pair<int,int>> combinaciones;
+
+std::list<std::pair<std::list<int>,int>> lista_camino;
 
 void combinationUtil(std::vector<int> arr,int data[],int start,int end,int index,int r);
 
 int costo = 0;
 
 //DFS recursivo
-int dfs(int v,int fin,std::vector<std::vector<arista>> adj_list,std::vector<bool> visitados){
-  
+//camino actual
+//peso actual
+//lista de caminos
+bool dfs(int v,int fin,std::vector<std::vector<arista>> adj_list,std::vector<bool> visitados,std::list<int> camino){
+
   visitados[v] = true;
 
+  //agregar el nodo al camino
+  camino.push_back(v);
+  
   if(v==fin){
-    std::cout << "encontre el camino costo::" << costo<< std::endl;
-    //std::cout << "encontre el camino ::" << std::endl;
+    
+    // display the original list 
+    
+    //std::cout << "encontre el camino costo::" << costo<< std::endl;
+
+    lista_camino.push_back(std::make_pair(camino,costo));
+    
     costo = 0;
-    return(0);
+    return true;
   }
   
   for(int i=0;i<adj_list[v].size();i++){
-
+    
     if(visitados[adj_list[v][i].first]==false){
-
-      std::cout << "Analizando nodo: " << v << "a visitar: " << adj_list[v][i].first
-		<< " w: " << adj_list[v][i].second <<std::endl;
+      
+      //std::cout << "Analizando nodo: " << v << "a visitar: " << adj_list[v][i].first << " w: " << adj_list[v][i].second <<std::endl;
 
       costo = costo + adj_list[v][i].second; //si no esta visitado sumarlo al costo
             
-      dfs(adj_list[v][i].first,fin,adj_list,visitados);
-      
-      
+      if(dfs(adj_list[v][i].first,fin,adj_list,visitados,camino))
+	return true;
+      else
+	costo = 0;
+
     }
   }
 
-  return -1;
+  camino.pop_back();
+  visitados[v] = false;
+  
+  return false;
 }
+
 
 
 //https://www.geeksforgeeks.org/print-all-possible-combinations-of-r-elements-in-a-given-array-of-size-n/
@@ -110,8 +121,8 @@ int main(){
   std::vector<bool> visitados;               //visitados
   std::vector<std::vector<arista>> adj_list; //lista de adjacencia
   
-  std::list<int> camino;
-  std::list<int> todos_caminos;
+  std::list<int> camino; //camino actual
+  //std::vector<std::pair<int,int>> todos_caminos;
   
   //------ construir adj list ------------
   std::cin >> num_ciudades >> num_carreteras;
@@ -130,9 +141,6 @@ int main(){
   //--------------------------------------
 
   
-  predfn  = 0;
-  postdfn = 0;
-  
   for(int i=0;i<adj_list.size();i++){
     visitados[i] = false;
     arr.push_back(i);
@@ -147,15 +155,42 @@ int main(){
   //iterar en los pares
   for(int i=0;i<combinaciones.size();i++){
     
-    std::cout << combinaciones[i].first <<","<< combinaciones[i].second<< std::endl;
+    //std::cout << combinaciones[i].first <<","<< combinaciones[i].second<< std::endl;
     
     int inicio = combinaciones[i].first;
     int fin = combinaciones[i].second;
     
-    dfs(inicio,fin,adj_list,visitados);
+    dfs(inicio,fin,adj_list,visitados,camino);
     
   }
-   
+
+  //iterar la lista para obtener el peso max
+  
+  int peso_max = 0;
+  std::list<int> camino_max;
+  
+  //std::list<std::pair<std::list<int>,int>> lista_camino;
+  //lista_camino.push_back(std::make_pair(camino,costo));
+  std::cout << "IMPRIMIR CAMINOS" << std::endl;
+
+
+  lista_camino.push_back(std::make_pair(camino,costo));
+
+  for(auto nodo: lista_camino) {
+    if(nodo.second>peso_max){
+      peso_max = nodo.second;
+      camino_max = nodo.first;
+    }
+  }
+
+  for(auto camino: camino_max){
+    std::cout << camino << " " ;
+  }
+
+  std::cout << std::endl;
+  
+  std::cout << peso_max << std::endl;
+  
   return 0;
 
 }
