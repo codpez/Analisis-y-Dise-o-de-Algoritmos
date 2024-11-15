@@ -68,8 +68,9 @@ bool dfs(int v,int fin,std::vector<std::vector<arista>> adj_list,std::vector<boo
     costo = 0;
     return true;
   }
+
   
-  for(int i=0;i<adj_list[v].size();i++){
+  for(int i=0;i<(int) adj_list[v].size();i++){
     
     if(visitados[adj_list[v][i].first]==false){
       
@@ -141,7 +142,7 @@ int main(){
   //--------------------------------------
 
   
-  for(int i=0;i<adj_list.size();i++){
+  for(int i=0;i<(int)adj_list.size();i++){
     visitados[i] = false;
     arr.push_back(i);
   }
@@ -153,7 +154,7 @@ int main(){
   combination(arr,n,r);
 
   //iterar en los pares
-  for(int i=0;i<combinaciones.size();i++){
+  for(int i=0;i<(int)combinaciones.size();i++){
     
     //std::cout << combinaciones[i].first <<","<< combinaciones[i].second<< std::endl;
     
